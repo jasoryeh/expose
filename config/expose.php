@@ -217,11 +217,11 @@ return [
         | if you enable authentication token validation.
         |
         */
-        'database' => implode(DIRECTORY_SEPARATOR, [
+        'database' => env('EXPOSE_DATABASE', implode(DIRECTORY_SEPARATOR, [
             $_SERVER['HOME'] ?? __DIR__,
             '.expose',
             'expose.db',
-        ]),
+        ])),
 
         /*
         |--------------------------------------------------------------------------
