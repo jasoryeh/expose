@@ -33,7 +33,20 @@ class ServeCommand extends Command
         }
 
         $loop->futureTick(function () {
-            $this->info('Expose server running on port '.$this->option('port').'.');
+            $name = config('app.name');
+            $ver = config('app.version');
+            $env = config('app.env');
+            $lang = config('app.locale');
+            $config = $this->option('config') ?? 'default';
+            $host = $this->argument('host');
+            $port = $this->option('port');
+            $hostname = $this->argument('hostname');
+            $admin = config('expose.admin.subdomain');
+            $this->info("{$name} v{$ver}-{$lang} [{$env}]");
+            $this->info("Configuration: {$config}");
+            $this->info("Hostname set to {$hostname}");
+            $this->info("Administrator interface accessible at {$admin}");
+            $this->info("Server running on port {$port} on host {$host}");
         });
 
         $validateAuthTokens = config('expose.admin.validate_auth_tokens');
