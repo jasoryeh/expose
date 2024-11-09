@@ -7,16 +7,16 @@ function parseServers(string $config_value = ''): array {
     }
 
     $unparsed_endpoints = explode(';', $config_value);
-    $parsed = array();
+    $servers = array();
     foreach ($unparsed_endpoints as $unparsed_endpoint) {
-        $parsed = explode(':', $unparsed_endpoint);
+        $parsed = explode(':', $unparsed_endpoint, 3);
 
-        $parsed["{$unparsed_endpoint}"] = [
-            'host' => $unparsed_endpoint[0],
-            'port' => (int) $unparsed_endpoint[1],
+        $servers[$parsed[0]] = [
+            'host' => $parsed[1],
+            'port' => (int) $parsed[2],
         ];
     }
-    return $parsed;
+    return $servers;
 }
 
 return [
@@ -31,7 +31,7 @@ return [
     | that should be used using the `--server=` option.
     |
     */
-    'servers' => parseServers(env('EXPOSE_SERVERS', 'sharedwithexpose.com:443')),
+    'servers' => parseServers(env('EXPOSE_SERVERS', 'main:sharedwithexpose.com:443')),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ return [
     | or the servers endpoint above.
     |
     */
-    'default_server' => env('EXPOSE_DEFAULT_SERVER', 'sharedwithexpose.com:443'),
+    'default_server' => env('EXPOSE_DEFAULT_SERVER', 'main'),
 
     /*
     |--------------------------------------------------------------------------
