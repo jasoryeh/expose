@@ -42,7 +42,9 @@ class ServeCommand extends Command
             $port = $this->option('port');
             $hostname = $this->argument('hostname');
             $admin = config('expose.admin.subdomain');
+            $database = config('expose.admin.database');
             $this->info("{$name} v{$ver}-{$lang} [{$env}]");
+            $this->info("Database: {$database}");
             $this->info("Configuration: {$config}");
             $this->info("Hostname set to {$hostname}");
             $this->info("Administrator interface accessible at {$admin}");
