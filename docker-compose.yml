@@ -7,10 +7,8 @@ services:
     ports:
       - 8080:${PORT}
     environment:
-      port: ${PORT}
-      domain: ${DOMAIN}
-      username: ${ADMIN_USERNAME}
-      password: ${ADMIN_PASSWORD}
+      PORT: ${PORT}
+      DOMAIN: ${DOMAIN}
     restart: always
     volumes:
-      - ./database/expose.db:/root/.expose
+      - ./expose.db:/root/.expose

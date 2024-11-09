@@ -13,11 +13,9 @@ WORKDIR /src
 # install the dependencies
 RUN composer install -o --prefer-dist && chmod a+x expose
 
-ENV port=8080
-ENV domain=localhost
-ENV username=username
-ENV password=password
-ENV exposeConfigPath=/src/config/expose.php
+ENV PORT=8080
+ENV DOMAIN=localhost
+ENV EXPOSE_CONFIG_PATH=/src/config/expose.php
 
 COPY docker-entrypoint.sh /usr/bin/
 RUN chmod 755 /usr/bin/docker-entrypoint.sh
