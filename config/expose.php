@@ -1,5 +1,24 @@
 <?php
 
+function parseServers(string $config_value = ''): array {
+
+    if (empty($config_value)) {
+        die("Failed: No servers found.");
+    }
+
+    $unparsed_endpoints = explode(';', $config_value);
+    $parsed = array();
+    foreach ($unparsed_endpoints as $unparsed_endpoint) {
+        $parsed = explode(':', $unparsed_endpoint);
+
+        $parsed["{$unparsed_endpoint}"] = [
+            'host' => $unparsed_endpoint[0],
+            'port' => (int) $unparsed_endpoint[1],
+        ];
+    }
+    return $parsed;
+}
+
 return [
 
     /*
@@ -12,12 +31,7 @@ return [
     | that should be used using the `--server=` option.
     |
     */
-    'servers' => [
-        'main' => [
-            'host' => 'sharedwithexpose.com',
-            'port' => 443,
-        ],
-    ],
+    'servers' => parseServers(env('EXPOSE_SERVERS', 'sharedwithexpose.com:443')),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +46,7 @@ return [
     | if available.
     |
     */
-    'server_endpoint' => 'https://expose.dev/api/servers',
+    'server_endpoint' => env('EXPOSE_SERVER_ENDPOINT', 'https://expose.dev/api/servers'),
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +57,7 @@ return [
     | or the servers endpoint above.
     |
     */
-    'default_server' => 'main',
+    'default_server' => env('EXPOSE_DEFAULT_SERVER', 'sharedwithexpose.com:443'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +69,7 @@ return [
     | `true` to fall-back to the system default DNS servers.
     |
     */
-    'dns' => '127.0.0.1',
+    'dns' => env('EXPOSE_DNS', '127.0.0.1'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +83,7 @@ return [
     | > expose token YOUR-AUTH-TOKEN
     |
     */
-    'auth_token' => '',
+    'auth_token' => env('EXPOSE_AUTH_TOKEN', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +97,7 @@ return [
     | > expose default-domain YOUR-CUSTOM-WHITELABEL-DOMAIN
     |
     */
-    'default_domain' => null,
+    'default_domain' => env('EXPOSE_DEFAULT_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -95,7 +109,7 @@ return [
     | Otherwise you can specify it here manually.
     |
     */
-    'default_tld' => 'test',
+    'default_tld' => env('EXPOSE_DEFAULT_TLD', 'test'),
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +121,7 @@ return [
     | automatically. Otherwise you can specify it here manually.
     |
     */
-    'default_https' => false,
+    'default_https' => strtolower(env('EXPOSE_DEFAULT_HTTPS', "false")) == 'true',
 
     /*
     |--------------------------------------------------------------------------
@@ -118,7 +132,7 @@ return [
     | requests and responses in the local dashboard.
     |
     */
-    'max_logged_requests' => 25,
+    'max_logged_requests' => (int) env('EXPOSE_MAX_LOGGED_REQUESTS', 25),
 
     /*
     |--------------------------------------------------------------------------
@@ -128,7 +142,7 @@ return [
     | The maximum memory allocated to the expose process.
     |
     */
-    'memory_limit' => '128M',
+    'memory_limit' => env('EXPOSE_MEMORY_LIMIT', '128M'),
 
     /*
     |--------------------------------------------------------------------------
@@ -149,28 +163,46 @@ return [
         /**
          * | Skip response logging by HTTP response code. Format: 4*, 5*.
          */
-        'status' => [
-            // "4*"
-        ],
+        'status' => explode(';',
+            env('EXPOSE_LOG_SKIP_STATUS',
+                join(';',
+                    [
+                        "4*",
+                    ]
+                )
+            )
+        ),
         /**
          * | Skip response logging by HTTP response content type. Ex: "text/css".
          */
-        'content_type' => [
-            //
-        ],
+        'content_type' => explode(';',
+            env('EXPOSE_LOG_SKIP_CONTENT_TYPE',
+                join(';',
+                    [
+                        // empty
+                    ]
+                )
+            )
+        ),
         /**
          * | Skip response logging by file extension. Ex: ".js.map", ".min.js", ".min.css".
          */
-        'extension' => [
-            '.js.map',
-            '.css.map',
-        ],
+        'extension' => explode(';',
+            env('EXPOSE_LOG_SKIP_EXTENSION',
+                join(';',
+                    [
+                        '.js.map',
+                        '.css.map',
+                    ]
+                )
+            )
+        ),
         /**
          * | Skip response logging if response size is greater than configured value.
          * | Valid suffixes are: B, KB, MB, GB.
          * | Ex: 500B, 1KB, 2MB, 3GB.
          */
-        'size' => '1MB',
+        'size' => env('EXPOSE_LOG_SKIP_SIZE', '1MB'),
     ],
 
     'admin' => [
@@ -203,7 +235,7 @@ return [
         | admin interface.
         |
         */
-        'validate_auth_tokens' => false,
+        'validate_auth_tokens' => strtolower(env('EXPOSE_VALIDATE_AUTH_TOKENS', "false")) == 'true',
 
         /*
         |--------------------------------------------------------------------------
@@ -216,7 +248,7 @@ return [
         | value to false.
         |
         */
-        'allow_tcp_port_sharing' => true,
+        'allow_tcp_port_sharing' => strtolower(env('EXPOSE_ALLOW_TCP_PORT_SHARING', "true")) == 'true',
 
         /*
         |--------------------------------------------------------------------------
@@ -232,8 +264,8 @@ return [
         |
         */
         'tcp_port_range' => [
-            'from' => 50000,
-            'to' => 60000,
+            'from' => (int) env('EXPOSE_TCP_RANGE_FROM', 50000),
+            'to' => (int) env('EXPOSE_TCP_RANGE_TO', 60000),
         ],
 
         /*
@@ -247,7 +279,7 @@ return [
         | clients can stay connected as long as they want.
         |
         */
-        'maximum_connection_length' => 0,
+        'maximum_connection_length' => (int) env('EXPOSE_MAX_CONNECTION_LENGTH', 0),
 
         /*
         |--------------------------------------------------------------------------
@@ -262,7 +294,7 @@ return [
         | override this setting per user.
         |
         */
-        'maximum_open_connections_per_user' => 0,
+        'maximum_open_connections_per_user' => (int) env('EXPOSE_MAX_CONNECTIONS_USER', 0),
 
         /*
         |--------------------------------------------------------------------------
@@ -274,7 +306,7 @@ return [
         | request this subdomain for their own connection.
         |
         */
-        'subdomain' => 'expose',
+        'subdomain' => env('EXPOSE_SUBDOMAIN', 'expose'),
 
         /*
         |--------------------------------------------------------------------------
@@ -285,7 +317,15 @@ return [
         | on your expose server.
         |
         */
-        'reserved_subdomains' => [],
+        'reserved_subdomains' => explode(';',
+            env('EXPOSE_SUBDOMAIN_RESERVED',
+                join(';',
+                    [
+                        // empty
+                    ]
+                )
+            )
+        ),
 
         /*
         |--------------------------------------------------------------------------
@@ -328,9 +368,20 @@ return [
         | accept as valid logins for the dashboard.
         |
         */
-        'users' => [
-            'username' => 'password',
-        ],
+        'users' => (function(array $auth_pairs): array {
+            $pairs = [];
+            foreach ($auth_pairs as $raw_pair) {
+                $parse = explode(':', $raw_pair, 2);
+                $pairs[$parse[0]] = $parse[1];
+            }
+            return $pairs;
+        })(explode(';', env('EXPOSE_USERS',
+            join(';',
+                [
+                    'username:password',
+                ]
+            )
+        ))),
 
         /*
         |--------------------------------------------------------------------------
@@ -383,9 +434,9 @@ return [
         ],
 
         'statistics' => [
-            'enable_statistics' => true,
+            'enable_statistics' => env('EXPOSE_STATS', true),
 
-            'interval_in_seconds' => 3600,
+            'interval_in_seconds' => env('EXPOSE_STATS_INTERVAL', 3600),
 
             'repository' => \App\Server\StatisticsRepository\DatabaseStatisticsRepository::class,
         ],
