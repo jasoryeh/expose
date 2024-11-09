@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Client\Exceptions\InvalidServerProvided;
 use App\Logger\CliRequestLogger;
+use App\Server\Exceptions\ExposeServerException;
 use Illuminate\Console\Parser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -12,9 +13,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 abstract class ServerAwareCommand extends Command
 {
-    const DEFAULT_HOSTNAME = 'sharedwithexpose.com';
-    const DEFAULT_PORT = 443;
-    const DEFAULT_SERVER_ENDPOINT = 'https://expose.dev/api/servers';
 
     public function __construct()
     {
@@ -42,13 +40,8 @@ abstract class ServerAwareCommand extends Command
             return $this->option('server-host');
         }
 
-        /**
-         * Try to find the server in the servers array.
-         * If no array exists at all (when upgrading from v1),
-         * always return sharedwithexpose.com.
-         */
         if (config('expose.servers') === null) {
-            return static::DEFAULT_HOSTNAME;
+            throw new ExposeServerException("'expose.servers' is not set!");
         }
 
         $server = $this->option('server') ?? config('expose.default_server');
@@ -67,13 +60,8 @@ abstract class ServerAwareCommand extends Command
             return $this->option('server-port');
         }
 
-        /**
-         * Try to find the server in the servers array.
-         * If no array exists at all (when upgrading from v1),
-         * always return sharedwithexpose.com.
-         */
         if (config('expose.servers') === null) {
-            return static::DEFAULT_PORT;
+            throw new ExposeServerException("'expose.servers' is not set!");
         }
 
         $server = $this->option('server') ?? config('expose.default_server');
@@ -88,10 +76,14 @@ abstract class ServerAwareCommand extends Command
 
     protected function lookupRemoteServers()
     {
+        if (config('expose.server_endpoint') === null) {
+            throw new ExposeServerException("'expose.server_endpoint' is not set!");
+        }
+
         try {
             return Http::withOptions([
                 'verify' => false,
-            ])->get(config('expose.server_endpoint', static::DEFAULT_SERVER_ENDPOINT))->json();
+            ])->get(config('expose.server_endpoint'))->json();
         } catch (\Throwable $e) {
             return [];
         }
