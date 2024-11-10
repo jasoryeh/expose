@@ -14,6 +14,9 @@ How?: Environment variables and Docker (if you'd like, but not required).
 ## Using this Fork
 1. Go to a directory you want to keep Expose installed in e.g. `cd ~/Documents/DevTools/`
 2. `git clone https://github.com/jasoryeh/expose.git`
+3. Then, choose one of the below: client or server
+
+### Installing as a Client `expose`
 3. `php expose install`
    * Follow the instructions, and verify the details.
    * Run the command if you would like to proceed.
@@ -21,6 +24,18 @@ How?: Environment variables and Docker (if you'd like, but not required).
 Alternatively, you may `php expose install --server=expose.example.com --token=tokenhere --export > ~/.profile` to cut straight to the chase.
 * For regular server, replace server argument `--default-server`
 * For no token, replace token argument with `--no-token`
+
+### Installing as a Server
+To run standalone:
+3. `EXPOSE_OTHER_SETTINGS=... php expose server $DOMAIN --port $PORT --validateAuthTokens`
+   * Specify additional config such as `EXPOSE_USERS` before the command
+
+To run with Docker:
+4. `cp .env-example-server .env`
+5. Modify `.env` to your desired settings
+6. Modify ports in `docker-compose.yml` for what expose should listen on
+7. `docker compose up`
+    * Add `-d`, and run again to run in background
 
 # Expose
 
