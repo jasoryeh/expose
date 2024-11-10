@@ -4,9 +4,8 @@ namespace App\Commands;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use LaravelZero\Framework\Commands\Command;
 
-class ServerListCommand extends Command
+class ServerListCommand extends ExposeCommand
 {
     const DEFAULT_SERVER_ENDPOINT = 'https://expose.dev/api/servers';
 

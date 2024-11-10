@@ -4,7 +4,6 @@ namespace App\Commands;
 
 use App\Client\Support\DefaultServerNodeVisitor;
 use App\Client\Support\InsertDefaultServerNodeVisitor;
-use Illuminate\Console\Command;
 use PhpParser\Lexer\Emulative;
 use PhpParser\Node;
 use PhpParser\NodeFinder;
@@ -13,7 +12,7 @@ use PhpParser\NodeVisitor\CloningVisitor;
 use PhpParser\Parser\Php7;
 use PhpParser\PrettyPrinter\Standard;
 
-class SetDefaultServerCommand extends Command
+class SetDefaultServerCommand extends ExposeCommand
 {
     protected $signature = 'default-server {server?}';
 
@@ -25,19 +24,8 @@ class SetDefaultServerCommand extends Command
         if (! is_null($server)) {
             $this->info('Setting the Expose default server to "'.$server.'"');
 
-            $configFile = implode(DIRECTORY_SEPARATOR, [
-                $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'],
-                '.expose',
-                'config.php',
-            ]);
-
-            if (! file_exists($configFile)) {
-                @mkdir(dirname($configFile), 0777, true);
-                $updatedConfigFile = $this->modifyConfigurationFile(base_path('config/expose.php'), $server);
-            } else {
-                $updatedConfigFile = $this->modifyConfigurationFile($configFile, $server);
-            }
-
+            $configFile = $this->getConfig();
+            $updatedConfigFile = $this->modifyConfigurationFile($configFile, $server);
             file_put_contents($configFile, $updatedConfigFile);
 
             return;

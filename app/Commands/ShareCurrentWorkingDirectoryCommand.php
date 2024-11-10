@@ -22,7 +22,12 @@ class ShareCurrentWorkingDirectoryCommand extends ShareCommand
 
     protected function detectTld(): string
     {
-        $valetConfigFile = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']).DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'valet'.DIRECTORY_SEPARATOR.'config.json';
+        $valetConfigFile = $this->path([
+            $this->getUserHome(),
+            '.config',
+            'valet',
+            'config.json',
+        ]);
 
         if (file_exists($valetConfigFile)) {
             $valetConfig = json_decode(file_get_contents($valetConfigFile));
@@ -36,7 +41,12 @@ class ShareCurrentWorkingDirectoryCommand extends ShareCommand
     protected function detectName(): string
     {
         $projectPath = getcwd();
-        $valetSitesPath = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']).DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'valet'.DIRECTORY_SEPARATOR.'Sites';
+        $valetSitesPath = $this->path([
+            $this->getUserHome(),
+            '.config',
+            'valet',
+            'Sites',
+        ]);
 
         if (is_dir($valetSitesPath)) {
             $site = collect(scandir($valetSitesPath))
@@ -61,7 +71,13 @@ class ShareCurrentWorkingDirectoryCommand extends ShareCommand
 
     protected function detectProtocol($host): string
     {
-        $certificateFile = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']).DIRECTORY_SEPARATOR.'.config'.DIRECTORY_SEPARATOR.'valet'.DIRECTORY_SEPARATOR.'Certificates'.DIRECTORY_SEPARATOR.$host.'.crt';
+        $certificateFile = $this->path([
+            $this->getUserHome(),
+            '.config',
+            'valet',
+            'Certificates',
+            $host.'.crt',
+        ]);
 
         if (file_exists($certificateFile)) {
             return 'https://';

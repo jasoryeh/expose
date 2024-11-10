@@ -4,10 +4,9 @@ namespace App\Commands;
 
 use App\Server\Factory;
 use InvalidArgumentException;
-use LaravelZero\Framework\Commands\Command;
 use React\EventLoop\LoopInterface;
 
-class ServeCommand extends Command
+class ServeCommand extends ExposeCommand
 {
     protected $signature = 'serve {hostname=localhost} {host=0.0.0.0}  {--validateAuthTokens} {--port=8080} {--config=}';
 

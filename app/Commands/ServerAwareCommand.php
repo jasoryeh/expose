@@ -8,10 +8,9 @@ use App\Server\Exceptions\ExposeServerException;
 use Illuminate\Console\Parser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
-use LaravelZero\Framework\Commands\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-abstract class ServerAwareCommand extends Command
+abstract class ServerAwareCommand extends ExposeCommand
 {
 
     public function __construct()

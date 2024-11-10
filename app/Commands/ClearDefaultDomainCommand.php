@@ -4,7 +4,6 @@ namespace App\Commands;
 
 use App\Client\Support\ClearDomainNodeVisitor;
 use App\Client\Support\InsertDefaultDomainNodeVisitor;
-use Illuminate\Console\Command;
 use PhpParser\Lexer\Emulative;
 use PhpParser\Node;
 use PhpParser\NodeFinder;
@@ -13,7 +12,7 @@ use PhpParser\NodeVisitor\CloningVisitor;
 use PhpParser\Parser\Php7;
 use PhpParser\PrettyPrinter\Standard;
 
-class ClearDefaultDomainCommand extends Command
+class ClearDefaultDomainCommand extends ExposeCommand
 {
     protected $signature = 'default-domain:clear';
 
@@ -23,18 +22,9 @@ class ClearDefaultDomainCommand extends Command
     {
         $this->info('Clearing the default Expose domain.');
 
-        $configFile = implode(DIRECTORY_SEPARATOR, [
-            $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'],
-            '.expose',
-            'config.php',
-        ]);
+        $configFile = $this->getConfig();
 
-        if (! file_exists($configFile)) {
-            @mkdir(dirname($configFile), 0777, true);
-            $updatedConfigFile = $this->modifyConfigurationFile(base_path('config/expose.php'));
-        } else {
-            $updatedConfigFile = $this->modifyConfigurationFile($configFile);
-        }
+        $updatedConfigFile = $this->modifyConfigurationFile($configFile);
 
         file_put_contents($configFile, $updatedConfigFile);
     }
