@@ -1,5 +1,27 @@
 [![https://expose.dev/?ref=github](https://expose.dev/images/expose/og_card.png)](https://expose.dev/?ref=github)
 
+# Fork of Expose
+Purpose: be able to run Expose a little bit more quickly and with less configuration files.
+
+How?: Environment variables and Docker (if you'd like, but not required).
+
+## Changes in this Fork
+1. All (most) Expose configuration can be modified via environment variables (good for Docker, good for less configuration files).
+   * Result: Easier configuration (hopefully).
+2. A little bit more info on server startup :)
+   * Result: Easier to find info.
+
+## Using this Fork
+1. Go to a directory you want to keep Expose installed in e.g. `cd ~/Documents/DevTools/`
+2. `git clone https://github.com/jasoryeh/expose.git`
+3. `php expose install`
+   * Follow the instructions, and verify the details.
+   * Run the command if you would like to proceed.
+
+Alternatively, you may `php expose install --server=expose.example.com --token=tokenhere --export > ~/.profile` to cut straight to the chase.
+* For regular server, replace server argument `--default-server`
+* For no token, replace token argument with `--no-token`
+
 # Expose
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/beyondcode/expose.svg?style=flat-square)](https://packagist.org/packages/beyondcode/expose)
