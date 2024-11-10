@@ -5,10 +5,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - 8080:${PORT}
-    environment:
-      PORT: ${PORT}
-      DOMAIN: ${DOMAIN}
-    restart: always
+      - 8080:8080 # adjust port here HOST:CONTAINER
+    env_file: ./.env
+    restart: unless-stopped
     volumes:
       - ./expose.db:/root/.expose
