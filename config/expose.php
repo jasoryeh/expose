@@ -119,7 +119,7 @@ return [
     | automatically. Otherwise you can specify it here manually.
     |
     */
-    'default_https' => strtolower(env('EXPOSE_DEFAULT_HTTPS', "false")) == 'true',
+    'default_https' => env('EXPOSE_DEFAULT_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -233,7 +233,7 @@ return [
         | admin interface.
         |
         */
-        'validate_auth_tokens' => strtolower(env('EXPOSE_VALIDATE_AUTH_TOKENS', "false")) == 'true',
+        'validate_auth_tokens' => env('EXPOSE_VALIDATE_AUTH_TOKENS', false),
 
         /*
         |--------------------------------------------------------------------------
@@ -246,7 +246,7 @@ return [
         | value to false.
         |
         */
-        'allow_tcp_port_sharing' => strtolower(env('EXPOSE_ALLOW_TCP_PORT_SHARING', "true")) == 'true',
+        'allow_tcp_port_sharing' => env('EXPOSE_ALLOW_TCP_PORT_SHARING', true),
 
         /*
         |--------------------------------------------------------------------------
