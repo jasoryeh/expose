@@ -1,24 +1,5 @@
 <?php
 
-function parseServers(string $config_value = ''): array {
-
-    if (empty($config_value)) {
-        die("Failed: No servers found.");
-    }
-
-    $unparsed_endpoints = explode(';', $config_value);
-    $servers = array();
-    foreach ($unparsed_endpoints as $unparsed_endpoint) {
-        $parsed = explode(':', $unparsed_endpoint, 3);
-
-        $servers[$parsed[0]] = [
-            'host' => $parsed[1],
-            'port' => (int) $parsed[2],
-        ];
-    }
-    return $servers;
-}
-
 return [
 
     /*
@@ -31,7 +12,24 @@ return [
     | that should be used using the `--server=` option.
     |
     */
-    'servers' => parseServers(env('EXPOSE_SERVERS', 'main:sharedwithexpose.com:443')),
+    'servers' => (function(string $config_value = ''): array {
+
+        if (empty($config_value)) {
+            die("Failed: No servers found.");
+        }
+
+        $unparsed_endpoints = explode(';', $config_value);
+        $servers = array();
+        foreach ($unparsed_endpoints as $unparsed_endpoint) {
+            $parsed = explode(':', $unparsed_endpoint, 3);
+
+            $servers[$parsed[0]] = [
+                'host' => $parsed[1],
+                'port' => (int) $parsed[2],
+            ];
+        }
+        return $servers;
+    })(env('EXPOSE_SERVERS', 'main:sharedwithexpose.com:443')),
 
     /*
     |--------------------------------------------------------------------------
