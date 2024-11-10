@@ -27,14 +27,16 @@ Alternatively, you may `php expose install --server=expose.example.com --token=t
 
 ### Installing as a Server
 To run standalone:
+
 3. `EXPOSE_OTHER_SETTINGS=... php expose server $DOMAIN --port $PORT --validateAuthTokens`
    * Specify additional config such as `EXPOSE_USERS` before the command
 
 To run with Docker:
-4. `cp .env-example-server .env`
-5. Modify `.env` to your desired settings
-6. Modify ports in `docker-compose.yml` for what expose should listen on
-7. `docker compose up`
+
+3. `cp .env-example-server .env`
+4. Modify `.env` to your desired settings
+5. Modify ports in `docker-compose.yml` for what expose should listen on
+6. `docker compose up`
     * Add `-d`, and run again to run in background
 
 # Expose
