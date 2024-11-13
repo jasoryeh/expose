@@ -63,4 +63,12 @@ abstract class ExposeCommand extends Command
 
         return $config_path;
     }
+
+    public function getToken() {
+        return $this->option('auth') ?? config('expose.auth_token', '');
+    }
+
+    public function cwd() {
+        return getcwd();
+    }
 }

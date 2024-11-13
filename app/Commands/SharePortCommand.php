@@ -13,7 +13,7 @@ class SharePortCommand extends ServerAwareCommand
 
     public function handle()
     {
-        $auth = $this->option('auth') ?? config('expose.auth_token', '');
+        $auth = $this->getToken();
 
         (new Factory())
             ->setLoop(app(LoopInterface::class))

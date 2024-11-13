@@ -15,7 +15,7 @@ class ShareCommand extends ServerAwareCommand
 
     public function handle()
     {
-        $auth = $this->option('auth') ?? config('expose.auth_token', '');
+        $auth = $this->getToken();
         $this->info('Using auth token: '.$auth, OutputInterface::VERBOSITY_DEBUG);
 
         if (strstr($this->argument('host'), 'host.docker.internal')) {
